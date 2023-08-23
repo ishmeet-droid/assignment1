@@ -56,21 +56,21 @@ public class TransactionController {
 
 	        // Request transactions from Back-end Server 1
 	        futures.add(webClient.get()
-	                .uri("/backendserver1/success/{accountNumber}", accountNumber)
+	                .uri("http://localhost:8083/backendserver1/success/{accountNumber}", accountNumber)
 	                .retrieve()
 	                .bodyToMono(new ParameterizedTypeReference<List<Transaction>>() {})
 	                .toFuture());
 
 	        // Request transactions from Back-end Server 2
 	        futures.add(webClient.get()
-	                .uri("/backendserver2/failure/{accountNumber}", accountNumber)
+	                .uri("http://localhost:8084/backendserver2/failure/{accountNumber}", accountNumber)
 	                .retrieve()
 	                .bodyToMono(new ParameterizedTypeReference<List<Transaction>>() {})
 	                .toFuture());
 
 	        // Request transactions from Back-end Server 3
 	        futures.add(webClient.get()
-	                .uri("/backendserver3/pending/{accountNumber}", accountNumber)
+	                .uri("http://localhost:8085/backendserver3/pending/{accountNumber}", accountNumber)
 	                .retrieve()
 	                .bodyToMono(new ParameterizedTypeReference<List<Transaction>>() {})
 	                .toFuture());
@@ -83,7 +83,7 @@ public class TransactionController {
 	                 futures.stream()
 	                        .flatMap(future -> future.join().stream())
 	                        .collect(Collectors.toList())
-	        ).join();
+	                ).join();
 	
 	}else if(
 			status.equalsIgnoreCase("success") ||
