@@ -1,19 +1,22 @@
 package com.nagarro.assignment1;
 
+import org.springframework.web.reactive.function.client.WebClient;
+
 import com.nagarro.assignment1.controller.backend.BackendInterface;
 import com.nagarro.assignment1.controller.backend.implementaion.Backend1;
 import com.nagarro.assignment1.controller.backend.implementaion.Backend2;
 import com.nagarro.assignment1.controller.backend.implementaion.Backend3;
-import com.nagarro.assignment1.repository.TransactionRepository;
+
 
 public class BackendFactory {
 
     
-     TransactionRepository transRepository;
+  
+     WebClient webClient;
 
-     public BackendFactory(TransactionRepository transRepository){
+     public BackendFactory( WebClient webClient){
 
-        this.transRepository = transRepository;
+        this.webClient = webClient;
      }
 
     public BackendInterface getFactory(String type){
@@ -22,13 +25,13 @@ public class BackendFactory {
 
         switch (type) {
             case "success":
-                return new Backend1(transRepository);
+                return new Backend1(webClient);
              
             case "failure":
-                return new Backend2(transRepository);
+                return new Backend2(webClient);
             
             case "pending":
-                return new Backend3(transRepository);
+                return new Backend3(webClient);
 
         }
 

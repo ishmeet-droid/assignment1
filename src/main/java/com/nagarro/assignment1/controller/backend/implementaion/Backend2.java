@@ -1,49 +1,38 @@
 package com.nagarro.assignment1.controller.backend.implementaion;
 
 import java.util.List;
-// import java.util.Map;
-// import java.util.stream.Collectors;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import java.util.concurrent.CompletableFuture;
+
+import org.springframework.core.ParameterizedTypeReference;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.nagarro.assignment1.controller.backend.BackendInterface;
 import com.nagarro.assignment1.model.Transaction;
-import com.nagarro.assignment1.repository.TransactionRepository;
+
 
 @RestController
 @RequestMapping("/backendserver2")
-public class Backend2 implements BackendInterface{
-	// @Autowired
-	private TransactionRepository transRepository;
+public class Backend2 implements BackendInterface {
+	
+	private WebClient webClient;
 
-	public Backend2(TransactionRepository transactionRepository){
-		this.transRepository = transactionRepository ;
+	public Backend2(WebClient webClient) {
+		this.webClient = webClient;
 	}
-//	@GetMapping("/backendserver2/{accountNumber}")
-//	public List<Transaction> getServer2Transaction(@PathVariable String accountNumber,@RequestParam("status") String status ){
-//	@GetMapping("/failure/{accountNumber}")	
-//	public Map<String, List<Transaction>> getServer2Transaction(@PathVariable String accountNumber ){
-		//List<Transaction> trans = transRepository.findByStatus(status.toLowerCase());
-		 
-		
-	
-		//List<Transaction> trans = transRepository.findByAccountNumber(accountNumber);
-	
-	@Override
-	@GetMapping("/failure/{accountNumber}")	
-	public List<Transaction>getServerTransaction(@PathVariable String accountNumber ){
-		
-		List<Transaction> trans = transRepository.findByAccountNumberAndStatus(accountNumber, "fail");
-		return trans;
-//		Map<String, List<Transaction>> groupedTransactions;
-//		groupedTransactions = trans.stream()
-//		        .collect(Collectors.groupingBy(Transaction::getAccountNumber));
-//		
-//		return groupedTransactions;
+
+	public CompletableFuture<List<Transaction>> getServer(String accountNumber) {
+
+		return webClient.get()
+				.uri("http://localhost:8084/backendserver2/failure/{accountNumber}", accountNumber)
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<List<Transaction>>() {
+				})
+				.toFuture();
+
 	}
 
 }

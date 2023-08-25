@@ -1,13 +1,14 @@
 package com.nagarro.assignment1.controller.backend;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-// import org.springframework.web.bind.annotation.PathVariable;
+
 
 import com.nagarro.assignment1.model.Transaction;
 
 public interface BackendInterface {
 
-    public  List<Transaction> getServerTransaction(String accountNumber );
+    public  CompletableFuture<List<Transaction>> getServer(String accountNumber );
     
 }
